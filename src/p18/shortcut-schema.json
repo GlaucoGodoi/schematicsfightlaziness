@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "SchematicsForFolderShortcuts",
+    "title": "Folder shortcuts",
+    "type":"object",
+    "properties": {
+        "showNewContent":{
+            "type":"boolean",
+            "description": "Show the new content of tsconfig.json in the console"
+        },
+        "createBackup":{
+            "type":"boolean",
+            "description": "Create a backup of the current tsconfig.json. The backup filename will be tsconfig.json.Backup"
+        }
+    }
+}

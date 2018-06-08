@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "add-shortcuts": {
+      "description": "Add folders shortcuts tsconfig.json to make the imports more readable.",
+      "factory": "./p18/index#AddFolderShortcuts",
+      "schema": "./p18/shortcut-schema.json"
+    }
+  }
+}
