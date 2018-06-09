@@ -1,0 +1,12 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "SchematicsForUpdateImports",
+    "title": "Update imports",
+    "type":"object",
+    "properties": {
+        "targetFolder":{
+            "type":"string",
+            "description": "The top folder to search and replace the imports. All subfolders will also be scanned."
+        }
+    }
+}

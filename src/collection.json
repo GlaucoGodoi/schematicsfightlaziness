@@ -5,6 +5,11 @@
       "description": "Add folders shortcuts tsconfig.json to make the imports more readable.",
       "factory": "./p18/index#AddFolderShortcuts",
       "schema": "./p18/shortcut-schema.json"
+    },
+    "update-imports": {
+      "description": "Replace lengthy imports with the configured shortcuts.",
+      "factory": "./p18/index#UpdateImportStatements",
+      "schema": "./p18/update-schema.json"
     }
   }
 }
