@@ -21,15 +21,30 @@ export class BasicPathConfiguration {
 
   constructor() {
     // Here you can add the folders and shortcuts that make sense to your environment
-    this.paths.push({ shortcut: '@configs/*', relativePath: 'src/app/configs/*' });
-    this.paths.push({ shortcut: '@sharedServices*', relativePath: 'src/app/shared/services*' });
-    this.paths.push({ shortcut: '@environments/*', relativePath: 'src/environments/*' });
-    this.paths.push({ shortcut: '@sharedComponents/*', relativePath: 'src/app/shared/compo*' });
+    this.paths.push({
+      shortcut: '@configs/*',
+      relativePath: 'src/app/configs/*'
+    });
+
+    this.paths.push({
+      shortcut: '@sharedServices*'
+      , relativePath: 'src/app/shared/services*'
+    });
+    this.paths.push({
+      shortcut: '@environments/*'
+      , relativePath: 'src/environments/*'
+    });
+
+    this.paths.push({
+      shortcut: '@sharedComponents/*'
+      , relativePath: 'src/app/shared/compo*'
+    });
 
     this.fillItemsForSearchReplace();
   }
 
-  // This function will remove the noise from the configuration
+  // This function will remove the noise from the configuration to allow the 
+  // strings to be used in the search and replace operations.
   private fillItemsForSearchReplace(): void {
     this.itemsForSearchReplace = this.paths.map(item => {
       return {
@@ -62,14 +77,16 @@ export function AddFolderShortcuts(options: PathShortCutsParameters): Rule {
     const tsConfigData: TsconfigFragment =
       JSON.parse(tsConfigContent ? tsConfigContent.toString() : 'void');
 
-    //Check if the data already contain some path configuration
+    // Check if the data already contains some path configuration.
+    // in this version we don't merge configurations so if a configuration
+    // was found we simply stop the process.
     if (tsConfigData.compilerOptions.hasOwnProperty('paths')) {
       _context.logger.info('The file already have the following paths configured:');
       _context.logger.info(JSON.stringify(tsConfigData.compilerOptions.paths, null, ' '));
       return tree;
     }
 
-    //Create a backupfile
+    //Create a backupfile if require
     if (options.createBackup) {
       tree.create(`${tsConfigFile}.Backup`, JSON.stringify(tsConfigData, null, ' '));
     }
@@ -105,30 +122,32 @@ export interface UpdateImportsParameters {
 }
 
 // This is the factory (Rule) that will update the .ts files 
-export function UpdateImportStatements(options: UpdateImportsParameters): Rule {
+export function UpdateImportStatements(
+                      options: UpdateImportsParameters): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-
     // Setup the initial folder to process
     options.targetFolder =
       options.targetFolder || tree.root.subdirs[tree.root.subdirs.length - 1];
-    
-      _context.logger
-      .info(`The process will scan files starting at the folder ${options.targetFolder}.`);
+
+    _context.logger
+      .info(`The process will scan files starting at the folder 
+      ${options.targetFolder}.`);
 
     const shortcutConfig = new BasicPathConfiguration();
 
     tree.getDir(options.targetFolder).visit(path => {
       if (path.endsWith('.ts')) {
-        
+
         const fileContent: Buffer | null = tree.read(path);
-        
+
         if (fileContent) {
           let textContent = fileContent.toString();
 
           shortcutConfig.itemsForSearchReplace.forEach(item => {
             if (textContent.indexOf(item.relativePath) > -1) {
-              textContent = textContent.replace(item.relativePath, item.shortcut);
-              tree.overwrite(path,textContent);
+              textContent = textContent.
+                replace(item.relativePath, item.shortcut);
+              tree.overwrite(path, textContent);
             }
           });
         }
